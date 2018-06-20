@@ -597,12 +597,22 @@ export class UserSession implements IAuthenticationManager {
    * to our current `portal`.
    */
   getToken(url: string) {
+    const portalUrlBase = this.portal.match(
+      /^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i
+    );
+    const domainParts = portalUrlBase[1].split(".");
+    const portalDomain =
+      domainParts[domainParts.length - 3] +
+      "." +
+      domainParts[domainParts.length - 2] +
+      "." +
+      domainParts[domainParts.length - 1];
     if (
-      (/^https?:\/\/www\.arcgis\.com\/sharing\/rest\/?/.test(this.portal),
-      /^https?:\/\/\S+\.arcgis\.com.+/.test(url))
+      /^https?:\/\/www\.arcgis\.com\/sharing\/rest\/?/.test(this.portal) &&
+      /^https?:\/\/\S+\.arcgis\.com.+/.test(url)
     ) {
       return this.getFreshToken();
-    } else if (new RegExp(this.portal).test(url)) {
+    } else if (new RegExp(portalDomain).test(url)) {
       return this.getFreshToken();
     } else {
       return this.getTokenForServer(url);

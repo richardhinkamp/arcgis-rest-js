@@ -115,7 +115,7 @@ describe("UserSession", () => {
         });
     });
 
-    it("should generate a token for an untrusted server", done => {
+    it("should generate a token for an untrusted, federated server", done => {
       const session = new UserSession({
         clientId: "id",
         token: "token",
